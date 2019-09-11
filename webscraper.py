@@ -5,10 +5,11 @@ import smtplib
 class Webscraper():
 
     def __init__(self):
-        self._headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.3"}
-        self._jobDict = {}
+        self._headers = "Enter your User Agent here"
         self._email = "Enter your email here"
         self._password = "Enter your App password for Google here"
+        self._jobDict = {}
+
 
     def get_jobs(self):
         """
