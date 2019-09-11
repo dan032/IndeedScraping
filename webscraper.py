@@ -1,13 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
-
+import smtplib
 
 class Webscraper():
 
     def __init__(self):
         self._headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.3"}
         self._jobDict = {}
-
+        self._email = "Enter your email here"
+        self._password = "Enter your App password for Google here"
 
     def get_jobs(self):
         """
@@ -54,6 +55,33 @@ class Webscraper():
         Sets up the SMTP connection to allow an email
         to be sent, sends the email, and terminates the connection
         """
-        pass
+        msg = self.create_email_message()
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.ehlo()
+        server.starttls()
+        server.ehlo()
+        server.login(self._email, self._password)
+        server.sendmail(self._email, self._email, msg)
+        server.quit()
 
-  
+    def create_email_message(self):
+        """
+        Creates the email message that is to be sent to
+        the specified email, and populates it
+        with the info from the jobDict dictionary
+        """
+        message_body = ''
+        count = 0
+        for job_tuple in self._jobDict.values():
+            message_body += f'Title: {job_tuple[0]}\n'
+            message_body += f'Company: {job_tuple[1]}\n'
+            message_body += f'Description: {job_tuple[2]}\n'
+            message_body += f'URL: {job_tuple[3]}\n\n'
+            count += 1
+            if count == 5:
+                break
+
+        subject = 'Job list!'
+        body = message_body.encode('ascii', 'ignore').decode('ascii')
+        msg = f"Subject: {subject}\n\n{body}"
+        return msg
